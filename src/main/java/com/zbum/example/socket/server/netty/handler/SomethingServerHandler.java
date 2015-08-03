@@ -54,6 +54,8 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String stringMessage = (String) msg;
 
+        logger.debug(stringMessage);
+
         String[] splitMessage = stringMessage.split(":");
 
         if ( splitMessage.length != 2 ) {
@@ -61,17 +63,18 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
-        logger.debug(stringMessage);
-
         if ( channelRepository.get(splitMessage[0]) != null ) {
             channelRepository.get(splitMessage[0]).writeAndFlush(splitMessage[1] + "\n\r");
         }
-
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         logger.error(cause.getMessage(), cause);
         //ctx.close();
+    }
+
+    public void setChannelRepository(ChannelRepository channelRepository) {
+        this.channelRepository = channelRepository;
     }
 }

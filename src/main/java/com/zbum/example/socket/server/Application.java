@@ -39,11 +39,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Spring Java Configuration
+ * Spring Java Configuration and Bootstrap
  *
  * @author Jibeom Jung
  */
-
 @SpringBootApplication
 @PropertySource(value= "classpath:properties/local/nettyserver.properties")
 public class Application {
