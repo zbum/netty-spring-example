@@ -33,5 +33,14 @@ This TCP Communication Service is a simple example for developer who want to mak
 ```
     04e9b346-50ec-4810-bd59-6daba2cc6f54:I Love You!!!
 ```
+* Then, you can receive Message like below
+```bash
+    $ telnet localhost 8090
+    Trying ::1...
+    Connected to localhost.
+    Escape character is '^]'.
+    Your channel key is 04e9b346-50ec-4810-bd59-6daba2cc6f54
+    I Love You!!!
+```
 
 
