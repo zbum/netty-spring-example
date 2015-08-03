@@ -20,8 +20,8 @@ This TCP Communication Service is a simple example for developer who want to mak
     Escape character is '^]'.
     Your channel key is /0:0:0:0:0:0:0:1:57220
 ```
-* Your channel key (ID) is 04e9b346-50ec-4810-bd59-6daba2cc6f54
-* Connect to this server by telnet command on annother terminal.
+* Your channel key (ID) is /0:0:0:0:0:0:0:1:57220.
+* Connect to this server by telnet command on another terminal.
 ```
     $ telnet localhost 8090
     Trying ::1...
@@ -29,11 +29,11 @@ This TCP Communication Service is a simple example for developer who want to mak
     Escape character is '^]'.
     Your channel key is /0:0:0:0:0:0:0:1:57221
 ```
-* From now, you can send message to 04e9b346-50ec-4810-bd59-6daba2cc6f54 channel by below
+* From now, you can send message to /0:0:0:0:0:0:0:1:57220 channel by below command.
 ```
     /0:0:0:0:0:0:0:1:57220::I Love You!!!
 ```
-* Then, you can receive Message like below
+* Then, you can receive Message like below on other terminal(/0:0:0:0:0:0:0:1:57220).
 ```bash
     $ telnet localhost 8090
     Trying ::1...
