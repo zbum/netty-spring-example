@@ -22,6 +22,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.SocketAddress;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,6 +40,8 @@ public class SomethingServerHandlerTest {
 
     private Channel channel;
 
+    private SocketAddress remoteAddress;
+
     @Before
     public void setUp() throws Exception {
         somethingServerHandler = new SomethingServerHandler();
@@ -45,6 +49,7 @@ public class SomethingServerHandlerTest {
 
         channelHandlerContext = mock(ChannelHandlerContext.class);
         channel = mock(Channel.class);
+        remoteAddress = mock(SocketAddress.class);
     }
 
     @After
@@ -55,6 +60,7 @@ public class SomethingServerHandlerTest {
     @Test
     public void testChannelActive() throws Exception {
         when(channelHandlerContext.channel()).thenReturn(channel);
+        when(channelHandlerContext.channel().remoteAddress()).thenReturn(remoteAddress);
         somethingServerHandler.channelActive(channelHandlerContext);
     }
 

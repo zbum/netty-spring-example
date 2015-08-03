@@ -42,6 +42,8 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
+
         ctx.fireChannelActive();
         logger.debug(ctx.channel().remoteAddress());
         String channelKey = ctx.channel().remoteAddress().toString();
@@ -78,7 +80,7 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx){
-        Assert.notNull(this.channelRepository);
+        Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
         Assert.notNull(ctx);
 
         String channelKey = ctx.channel().remoteAddress().toString();
