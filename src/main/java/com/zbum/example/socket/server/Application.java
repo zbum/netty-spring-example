@@ -44,18 +44,18 @@ import java.util.Set;
  * @author Jibeom Jung
  */
 @SpringBootApplication
-@PropertySource(value= "classpath:properties/local/nettyserver.properties")
+@PropertySource(value= "classpath:/properties/local/nettyserver.properties")
 public class Application {
 
     @Configuration
     @Profile("production")
-    @PropertySource("classpath:properties/production/nettyserver.properties")
+    @PropertySource("classpath:/properties/production/nettyserver.properties")
     static class Production
     { }
 
     @Configuration
     @Profile("local")
-    @PropertySource({"classpath:properties/local/nettyserver.properties"})
+    @PropertySource({"classpath:/properties/local/nettyserver.properties"})
     static class Local
     { }
 

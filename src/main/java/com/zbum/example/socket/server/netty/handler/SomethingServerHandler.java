@@ -23,8 +23,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
+import org.springframework.util.Assert;
 
 /**
  * event handler to process receiving messages
@@ -44,10 +43,13 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ctx.fireChannelActive();
-        String channelKey = UUID.randomUUID().toString();
+        logger.debug(ctx.channel().remoteAddress());
+        String channelKey = ctx.channel().remoteAddress().toString();
         channelRepository.put(channelKey, ctx.channel());
 
         ctx.writeAndFlush("Your channel key is " + channelKey + "\n\r");
+
+        logger.debug("Binded Channel Count is " + this.channelRepository.size());
     }
 
     @Override
@@ -56,7 +58,7 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
 
         logger.debug(stringMessage);
 
-        String[] splitMessage = stringMessage.split(":");
+        String[] splitMessage = stringMessage.split("::");
 
         if ( splitMessage.length != 2 ) {
             ctx.channel().writeAndFlush(stringMessage + "\n\r");
@@ -72,6 +74,17 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         logger.error(cause.getMessage(), cause);
         //ctx.close();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx){
+        Assert.notNull(this.channelRepository);
+        Assert.notNull(ctx);
+
+        String channelKey = ctx.channel().remoteAddress().toString();
+        this.channelRepository.remove(channelKey);
+
+        logger.debug("Binded Channel Count is " + this.channelRepository.size());
     }
 
     public void setChannelRepository(ChannelRepository channelRepository) {

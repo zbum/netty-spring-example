@@ -54,6 +54,7 @@ public class SomethingServerHandlerTest {
 
     @Test
     public void testChannelActive() throws Exception {
+        when(channelHandlerContext.channel()).thenReturn(channel);
         somethingServerHandler.channelActive(channelHandlerContext);
     }
 

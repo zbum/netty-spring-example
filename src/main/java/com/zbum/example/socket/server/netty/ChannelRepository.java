@@ -35,4 +35,10 @@ public class ChannelRepository {
     public Channel get(String key) {
         return channelCache.get(key);
     }
+
+    public void remove(String key) { this.channelCache.remove(key); }
+
+    public int size() {
+        return this.channelCache.size();
+    }
 }

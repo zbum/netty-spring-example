@@ -18,7 +18,7 @@ This TCP Communication Service is a simple example for developer who want to mak
     Trying ::1...
     Connected to localhost.
     Escape character is '^]'.
-    Your channel key is 04e9b346-50ec-4810-bd59-6daba2cc6f54
+    Your channel key is /0:0:0:0:0:0:0:1:57220
 ```
 * Your channel key (ID) is 04e9b346-50ec-4810-bd59-6daba2cc6f54
 * Connect to this server by telnet command on annother terminal.
@@ -27,11 +27,11 @@ This TCP Communication Service is a simple example for developer who want to mak
     Trying ::1...
     Connected to localhost.
     Escape character is '^]'.
-    Your channel key is af9b13f5-b259-4743-9a6d-d887a3a076bf
+    Your channel key is /0:0:0:0:0:0:0:1:57221
 ```
 * From now, you can send message to 04e9b346-50ec-4810-bd59-6daba2cc6f54 channel by below
 ```
-    04e9b346-50ec-4810-bd59-6daba2cc6f54:I Love You!!!
+    /0:0:0:0:0:0:0:1:57220::I Love You!!!
 ```
 * Then, you can receive Message like below
 ```bash
@@ -39,7 +39,7 @@ This TCP Communication Service is a simple example for developer who want to mak
     Trying ::1...
     Connected to localhost.
     Escape character is '^]'.
-    Your channel key is 04e9b346-50ec-4810-bd59-6daba2cc6f54
+    Your channel key is /0:0:0:0:0:0:0:1:57220
     I Love You!!!
 ```
 

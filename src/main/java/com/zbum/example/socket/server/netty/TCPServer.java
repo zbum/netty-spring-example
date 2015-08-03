@@ -52,6 +52,7 @@ public class TCPServer {
     @PreDestroy
     public void stop() throws Exception {
         serverChannel.close();
+        serverChannel.parent().close();
     }
 
     public ServerBootstrap getServerBootstrap() {
