@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.net.InetSocketAddress;
 
@@ -44,7 +43,6 @@ public class TCPServer {
 
     private Channel serverChannel;
 
-    @PostConstruct
     public void start() throws Exception {
         serverChannel =  serverBootstrap.bind(tcpPort).sync().channel().closeFuture().sync().channel();
     }
