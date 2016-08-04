@@ -44,7 +44,6 @@ public class TCPServer {
 
     private Channel serverChannel;
 
-    @PostConstruct
     public void start() throws Exception {
         serverChannel =  serverBootstrap.bind(tcpPort).sync().channel().closeFuture().sync().channel();
     }

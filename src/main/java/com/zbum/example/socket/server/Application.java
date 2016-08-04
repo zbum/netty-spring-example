@@ -16,6 +16,7 @@
 package com.zbum.example.socket.server;
 
 import com.zbum.example.socket.server.netty.ChannelRepository;
+import com.zbum.example.socket.server.netty.TCPServer;
 import com.zbum.example.socket.server.netty.handler.SomethingChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -59,8 +61,11 @@ public class Application {
     static class Local
     { }
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+    public static void main(String[] args) throws Exception{
+        ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+        TCPServer tcpServer = context.getBean(TCPServer.class);
+        tcpServer.start();
+
     }
 
     @Value("${tcp.port}")
