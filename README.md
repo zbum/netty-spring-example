@@ -1,7 +1,7 @@
 # Netty spring Example
 TCP communication server with Netty And SpringBoot
 
-This TCP Communication Service is a simple example for developer who wants to make tcp service with Spring-Boot and Netty.
+This TCP Communication Service is the simple backend application for developer who wants to make tcp service with Spring-Boot and Netty.
 
 
 ## Feature
