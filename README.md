@@ -20,7 +20,7 @@ This TCP Communication Service is the simple backend application for developer w
     Escape character is '^]'.
     Your channel key is /0:0:0:0:0:0:0:1:57220
 ```
-* Your channel key (ID) is 04e9b346-50ec-4810-bd59-6daba2cc6f54
+* Your channel key (ID) is /0:0:0:0:0:0:0:1:57220
 * Connect to this server by telnet command on annother terminal.
 ```
     $ telnet localhost 8090
@@ -29,7 +29,7 @@ This TCP Communication Service is the simple backend application for developer w
     Escape character is '^]'.
     Your channel key is /0:0:0:0:0:0:0:1:57221
 ```
-* From now, you can send message to 04e9b346-50ec-4810-bd59-6daba2cc6f54 channel by below
+* From now, you can send message to /0:0:0:0:0:0:0:1:57220 channel by below
 ```
     /0:0:0:0:0:0:0:1:57220::I Love You!!!
 ```
