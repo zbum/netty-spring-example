@@ -44,7 +44,7 @@ public class SomethingChannelInitializer extends ChannelInitializer<SocketChanne
     private ChannelInboundHandlerAdapter somethingServerHandler;
 
     @Override
-    protected void initChannel(SocketChannel socketChannel) throws Exception {
+    protected void initChannel(SocketChannel socketChannel) {
         ChannelPipeline pipeline = socketChannel.pipeline();
 
         // Add the text line codec combination first,

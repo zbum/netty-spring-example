@@ -19,6 +19,8 @@ import com.zbum.example.socket.server.netty.ChannelRepository;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,34 +33,38 @@ import org.springframework.util.Assert;
  * @author Jibeom Jung
  */
 @Component
-@Qualifier("somethingServerHandler")
+@Slf4j
+@RequiredArgsConstructor
 @ChannelHandler.Sharable
 public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
 
-    @Autowired
-    private ChannelRepository channelRepository;
-
-    private static Logger logger = Logger.getLogger(SomethingServerHandler.class.getName());
+    private final ChannelRepository channelRepository;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
 
         ctx.fireChannelActive();
-        logger.debug(ctx.channel().remoteAddress());
+        if (log.isDebugEnabled()) {
+            log.debug(ctx.channel().remoteAddress() + "");
+        }
         String channelKey = ctx.channel().remoteAddress().toString();
         channelRepository.put(channelKey, ctx.channel());
 
-        ctx.writeAndFlush("Your channel key is " + channelKey + "\n\r");
+        ctx.writeAndFlush("Your channel key is " + channelKey + "\r\n");
 
-        logger.debug("Binded Channel Count is " + this.channelRepository.size());
+        if (log.isDebugEnabled()) {
+            log.debug("Binded Channel Count is {}", this.channelRepository.size());
+        }
+
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         String stringMessage = (String) msg;
-
-        logger.debug(stringMessage);
+        if (log.isDebugEnabled()) {
+            log.debug(stringMessage);
+        }
 
         String[] splitMessage = stringMessage.split("::");
 
@@ -74,22 +80,18 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.error(cause.getMessage(), cause);
-        //ctx.close();
+        log.error(cause.getMessage(), cause);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx){
         Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
-        Assert.notNull(ctx);
+        Assert.notNull(ctx, "[Assertion failed] - ChannelHandlerContext is required; it must not be null");
 
         String channelKey = ctx.channel().remoteAddress().toString();
         this.channelRepository.remove(channelKey);
-
-        logger.debug("Binded Channel Count is " + this.channelRepository.size());
-    }
-
-    public void setChannelRepository(ChannelRepository channelRepository) {
-        this.channelRepository = channelRepository;
+        if (log.isDebugEnabled()) {
+            log.debug("Binded Channel Count is " + this.channelRepository.size());
+        }
     }
 }
