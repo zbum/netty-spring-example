@@ -15,6 +15,7 @@
  */
 package com.zbum.example.socket.server;
 
+import com.zbum.example.socket.server.config.NettyProperties;
 import com.zbum.example.socket.server.netty.ChannelRepository;
 import com.zbum.example.socket.server.netty.TCPServer;
 import com.zbum.example.socket.server.netty.handler.SomethingChannelInitializer;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,20 +48,11 @@ import java.util.Set;
  * @author Jibeom Jung
  */
 @SpringBootApplication
-@PropertySource(value= "classpath:/properties/local/nettyserver.properties")
+@EnableConfigurationProperties(NettyProperties.class)
 public class Application {
 
-    @Configuration
-    @Profile("production")
-    @PropertySource("classpath:/properties/production/nettyserver.properties")
-    static class Production
-    { }
-
-    @Configuration
-    @Profile("local")
-    @PropertySource({"classpath:/properties/local/nettyserver.properties"})
-    static class Local
-    { }
+    @Autowired
+    private NettyProperties nettyProperties;
 
     public static void main(String[] args) throws Exception{
         ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
@@ -68,22 +61,6 @@ public class Application {
 
     }
 
-    @Value("${tcp.port}")
-    private int tcpPort;
-
-    @Value("${boss.thread.count}")
-    private int bossCount;
-
-    @Value("${worker.thread.count}")
-    private int workerCount;
-
-    @Value("${so.keepalive}")
-    private boolean keepAlive;
-
-    @Value("${so.backlog}")
-    private int backlog;
-
-    @SuppressWarnings("unchecked")
     @Bean(name = "serverBootstrap")
     public ServerBootstrap bootstrap() {
         ServerBootstrap b = new ServerBootstrap();
@@ -100,33 +77,31 @@ public class Application {
     }
 
     @Autowired
-    @Qualifier("somethingChannelInitializer")
     private SomethingChannelInitializer somethingChannelInitializer;
 
-    @Bean(name = "tcpChannelOptions")
+    @Bean
     public Map<ChannelOption<?>, Object> tcpChannelOptions() {
         Map<ChannelOption<?>, Object> options = new HashMap<ChannelOption<?>, Object>();
-        options.put(ChannelOption.SO_KEEPALIVE, keepAlive);
-        options.put(ChannelOption.SO_BACKLOG, backlog);
+        options.put(ChannelOption.SO_BACKLOG, nettyProperties.getBacklog());
         return options;
     }
 
-    @Bean(name = "bossGroup", destroyMethod = "shutdownGracefully")
+    @Bean(destroyMethod = "shutdownGracefully")
     public NioEventLoopGroup bossGroup() {
-        return new NioEventLoopGroup(bossCount);
+        return new NioEventLoopGroup(nettyProperties.getBossCount());
     }
 
-    @Bean(name = "workerGroup", destroyMethod = "shutdownGracefully")
+    @Bean(destroyMethod = "shutdownGracefully")
     public NioEventLoopGroup workerGroup() {
-        return new NioEventLoopGroup(workerCount);
+        return new NioEventLoopGroup(nettyProperties.getWorkerCount());
     }
 
-    @Bean(name = "tcpSocketAddress")
-    public InetSocketAddress tcpPort() {
-        return new InetSocketAddress(tcpPort);
+    @Bean
+    public InetSocketAddress tcpSocketAddress() {
+        return new InetSocketAddress(nettyProperties.getTcpPort());
     }
 
-    @Bean(name = "channelRepository")
+    @Bean
     public ChannelRepository channelRepository() {
         return new ChannelRepository();
     }

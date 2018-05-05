@@ -43,9 +43,8 @@ public class SomethingServerHandlerTest {
     private SocketAddress remoteAddress;
 
     @Before
-    public void setUp() throws Exception {
-        somethingServerHandler = new SomethingServerHandler();
-        somethingServerHandler.setChannelRepository(new ChannelRepository());
+    public void setUp() {
+        somethingServerHandler = new SomethingServerHandler(new ChannelRepository());
 
         channelHandlerContext = mock(ChannelHandlerContext.class);
         channel = mock(Channel.class);
@@ -53,7 +52,7 @@ public class SomethingServerHandlerTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
