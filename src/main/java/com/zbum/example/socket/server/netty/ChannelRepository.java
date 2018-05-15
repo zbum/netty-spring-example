@@ -18,6 +18,9 @@ package com.zbum.example.socket.server.netty;
 import io.netty.channel.Channel;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Channel Repository using HashMap
@@ -25,7 +28,7 @@ import java.util.HashMap;
  * @author Jibeom Jung
  */
 public class ChannelRepository {
-    private HashMap<String, Channel> channelCache = new HashMap<String, Channel>();
+    private ConcurrentMap<String, Channel> channelCache = new ConcurrentHashMap<String, Channel>();
 
     public ChannelRepository put(String key, Channel value) {
         channelCache.put(key, value);
