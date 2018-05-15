@@ -3,6 +3,8 @@ TCP communication server with Netty And SpringBoot
 
 This TCP Communication Service is the simple backend application for developer who wants to make tcp service with Spring-Boot and Netty.
 
+The main purpose of this codes is to explain how to build Netty based server application with Spring Boot.
+
 
 ## Feature
 * Telnet Client can send message to other telnet client.
