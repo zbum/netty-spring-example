@@ -17,9 +17,11 @@ package com.zbum.example.socket.server.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -34,8 +36,8 @@ import java.net.InetSocketAddress;
  *
  * @author Jibeom Jung
  */
-@Getter
-@Setter
+
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class TCPServer {
@@ -46,8 +48,14 @@ public class TCPServer {
 
     private Channel serverChannel;
 
-    public void start() throws Exception {
-        serverChannel =  serverBootstrap.bind(tcpPort).sync().channel().closeFuture().sync().channel();
+    public void start()  {
+        try {
+            ChannelFuture serverChannelFuture = serverBootstrap.bind(tcpPort).sync();
+            log.info("Server is started : port {}", tcpPort.getPort());
+            serverChannel = serverChannelFuture.channel().closeFuture().sync().channel();
+        } catch (InterruptedException e) {
+            throw new TCPServerStartFailedException(e);
+        }
     }
 
     @PreDestroy

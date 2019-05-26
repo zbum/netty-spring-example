@@ -28,13 +28,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Test for  SomethingServerHandler.java
+ * Test for  SimpleChatServerHandler.java
  *
  * @author Jibeom Jung
  */
-public class SomethingServerHandlerTest {
+public class SimpleChatServerHandlerTest {
 
-    private SomethingServerHandler somethingServerHandler;
+    private SimpleChatServerHandler somethingServerHandler;
 
     private ChannelHandlerContext channelHandlerContext;
 
@@ -44,7 +44,7 @@ public class SomethingServerHandlerTest {
 
     @Before
     public void setUp() {
-        somethingServerHandler = new SomethingServerHandler(new ChannelRepository());
+        somethingServerHandler = new SimpleChatServerHandler(new ChannelRepository());
 
         channelHandlerContext = mock(ChannelHandlerContext.class);
         channel = mock(Channel.class);
@@ -64,13 +64,13 @@ public class SomethingServerHandlerTest {
     }
 
     @Test
-    public void testChannelRead() throws Exception {
+    public void testChannelRead() {
         when(channelHandlerContext.channel()).thenReturn(channel);
         somethingServerHandler.channelRead(channelHandlerContext, "test message");
     }
 
     @Test
-    public void testExceptionCaught() throws Exception {
+    public void testExceptionCaught() {
 
     }
 }

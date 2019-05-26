@@ -21,9 +21,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -36,7 +33,7 @@ import org.springframework.util.Assert;
 @Slf4j
 @RequiredArgsConstructor
 @ChannelHandler.Sharable
-public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
+public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
 
     private final ChannelRepository channelRepository;
 
@@ -68,12 +65,12 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
 
         String[] splitMessage = stringMessage.split("::");
 
-        if ( splitMessage.length != 2 ) {
+        if (splitMessage.length != 2) {
             ctx.channel().writeAndFlush(stringMessage + "\n\r");
             return;
         }
 
-        if ( channelRepository.get(splitMessage[0]) != null ) {
+        if (channelRepository.get(splitMessage[0]) != null) {
             channelRepository.get(splitMessage[0]).writeAndFlush(splitMessage[1] + "\n\r");
         }
     }
@@ -84,7 +81,7 @@ public class SomethingServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx){
+    public void channelInactive(ChannelHandlerContext ctx) {
         Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
         Assert.notNull(ctx, "[Assertion failed] - ChannelHandlerContext is required; it must not be null");
 

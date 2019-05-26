@@ -15,7 +15,6 @@
  */
 package com.zbum.example.socket.server.netty.handler;
 
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -23,8 +22,7 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,26 +31,24 @@ import org.springframework.stereotype.Component;
  * @author Jibeom Jung
  */
 @Component
-@Qualifier("somethingChannelInitializer")
-public class SomethingChannelInitializer extends ChannelInitializer<SocketChannel> {
+@RequiredArgsConstructor
+public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-    private static final StringDecoder DECODER = new StringDecoder();
-    private static final StringEncoder ENCODER = new StringEncoder();
+    private final StringDecoder DECODER = new StringDecoder();
+    private final StringEncoder ENCODER = new StringEncoder();
 
-    @Autowired
-    @Qualifier("somethingServerHandler")
-    private ChannelInboundHandlerAdapter somethingServerHandler;
+    private final SimpleChatServerHandler simpleChatServerHandler;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
         ChannelPipeline pipeline = socketChannel.pipeline();
 
         // Add the text line codec combination first,
-        pipeline.addLast(new DelimiterBasedFrameDecoder(1024*1024, Delimiters.lineDelimiter()));
+        pipeline.addLast(new DelimiterBasedFrameDecoder(1024 * 1024, Delimiters.lineDelimiter()));
         // the encoder and decoder are static as these are sharable
         pipeline.addLast(DECODER);
         pipeline.addLast(ENCODER);
 
-        pipeline.addLast(somethingServerHandler);
+        pipeline.addLast(simpleChatServerHandler);
     }
 }
