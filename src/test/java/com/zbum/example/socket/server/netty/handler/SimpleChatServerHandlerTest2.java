@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -19,13 +18,13 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SomethingServerHandlerTest2 {
+public class SimpleChatServerHandlerTest2 {
     @Autowired
-    private SomethingServerHandler somethingServerHandler;
+    private SimpleChatServerHandler simpleChatServerHandler;
 
     @Test
     public void channelRead() {
-        EmbeddedChannel channel = new EmbeddedChannel(somethingServerHandler);
+        EmbeddedChannel channel = new EmbeddedChannel(simpleChatServerHandler);
         channel.connect(new InetSocketAddress("127.0.0.1", 10) );
 
         String res1 = channel.readOutbound();

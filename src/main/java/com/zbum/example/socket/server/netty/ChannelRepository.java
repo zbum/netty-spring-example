@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author Jibeom Jung
  */
 public class ChannelRepository {
-    private ConcurrentMap<String, Channel> channelCache = new ConcurrentHashMap<String, Channel>();
+    private ConcurrentMap<String, Channel> channelCache = new ConcurrentHashMap<>();
 
     public ChannelRepository put(String key, Channel value) {
         channelCache.put(key, value);
