@@ -45,4 +45,7 @@ The main purpose of this codes is to explain how to build Netty based server app
     I Love You!!!
 ```
 
+## If you want to know about the Author
+* see : [https://www.manty.co.kr](https://www.manty.co.kr)
+
 
