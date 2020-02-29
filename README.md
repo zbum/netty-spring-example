@@ -23,7 +23,7 @@ The main purpose of this codes is to explain how to build Netty based server app
     Your channel key is /0:0:0:0:0:0:0:1:57220
 ```
 * Your channel key (ID) is /0:0:0:0:0:0:0:1:57220
-* Connect to this server by telnet command on annother terminal.
+* Connect to this server by telnet command on another terminal.
 ```
     $ telnet localhost 8090
     Trying ::1...

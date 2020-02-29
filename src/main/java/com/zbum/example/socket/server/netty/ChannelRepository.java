@@ -17,8 +17,6 @@ package com.zbum.example.socket.server.netty;
 
 import io.netty.channel.Channel;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -30,9 +28,8 @@ import java.util.concurrent.ConcurrentMap;
 public class ChannelRepository {
     private ConcurrentMap<String, Channel> channelCache = new ConcurrentHashMap<>();
 
-    public ChannelRepository put(String key, Channel value) {
+    public void put(String key, Channel value) {
         channelCache.put(key, value);
-        return this;
     }
 
     public Channel get(String key) {

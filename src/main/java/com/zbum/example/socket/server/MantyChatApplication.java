@@ -29,7 +29,7 @@ public class MantyChatApplication {
      *
      * @return
      */
-    @SuppressWarnings({"Convert2Lambda"})
+    @SuppressWarnings({"Convert2Lambda", "java:S1604"})
     @Bean
     public ApplicationListener<ApplicationReadyEvent> readyEventApplicationListener() {
         return new ApplicationListener<ApplicationReadyEvent>() {
