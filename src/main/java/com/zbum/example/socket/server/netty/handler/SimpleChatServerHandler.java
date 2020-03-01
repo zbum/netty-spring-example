@@ -16,7 +16,7 @@
 package com.zbum.example.socket.server.netty.handler;
 
 import com.zbum.example.socket.server.domain.User;
-import com.zbum.example.socket.server.netty.ChannelRepository;
+import com.zbum.example.socket.server.domain.ChannelRepository;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
 /**
  * event handler to process receiving messages
  *
- * @author Jibeom Jung
+ * @author Jibeom Jung akka. Manty
  */
 @Component
 @Slf4j
@@ -75,12 +75,8 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
-        if (channelRepository.get(splitMessage[0]) != null) {
-            User user = User.current(ctx.channel());
-            channelRepository.get(splitMessage[0]).write(user.getUsername());
-            channelRepository.get(splitMessage[0]).write(">");
-            channelRepository.get(splitMessage[0]).writeAndFlush(splitMessage[1] + "\n\r");
-        }
+        User.current(ctx.channel())
+                .tell(channelRepository.get(splitMessage[0]), splitMessage[0], splitMessage[1]);
     }
 
     @Override
@@ -95,7 +91,7 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
 
         User.current(ctx.channel()).logout(this.channelRepository, ctx.channel());
         if (log.isDebugEnabled()) {
-            log.debug("Binded Channel Count is " + this.channelRepository.size());
+            log.debug("Channel Count is " + this.channelRepository.size());
         }
     }
 }

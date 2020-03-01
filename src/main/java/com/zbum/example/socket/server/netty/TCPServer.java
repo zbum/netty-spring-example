@@ -29,7 +29,7 @@ import java.net.InetSocketAddress;
 /**
  * Main Server
  *
- * @author Jibeom Jung
+ * @author Jibeom Jung akka. Manty
  */
 
 @Slf4j
@@ -49,7 +49,7 @@ public class TCPServer {
             log.info("Server is started : port {}", tcpPort.getPort());
             serverChannel = serverChannelFuture.channel().closeFuture().sync().channel();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            throw new TCPServerStartFailedException(e);
         }
     }
 

@@ -15,7 +15,7 @@
  */
 package com.zbum.example.socket.server.netty.handler;
 
-import com.zbum.example.socket.server.netty.ChannelRepository;
+import com.zbum.example.socket.server.domain.ChannelRepository;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import org.junit.After;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 /**
  * Test for  SimpleChatServerHandler.java
  *
- * @author Jibeom Jung
+ * @author Jibeom Jung akka. Manty
  */
 public class SimpleChatServerHandlerTest {
 

@@ -15,7 +15,7 @@
  */
 package com.zbum.example.socket.server.config;
 
-import com.zbum.example.socket.server.netty.ChannelRepository;
+import com.zbum.example.socket.server.domain.ChannelRepository;
 import com.zbum.example.socket.server.netty.handler.SimpleChatChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
@@ -30,6 +30,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.net.InetSocketAddress;
 
+/**
+ * NettyConfiguration
+ *
+ * @author Jibeom Jung akka. Manty
+ */
 @Configuration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(NettyProperties.class)

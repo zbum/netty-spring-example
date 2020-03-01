@@ -23,6 +23,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * Netty ConfigurationProperties
+ *
+ * @author Jibeom Jung akka. Manty
+ */
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "netty")

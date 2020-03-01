@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 /**
  * Channel Initializer
  *
- * @author Jibeom Jung
+ * @author Jibeom Jung akka. Manty
  */
 @Component
 @RequiredArgsConstructor
