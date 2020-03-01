@@ -18,15 +18,10 @@ package com.zbum.example.socket.server.netty;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.net.InetSocketAddress;
 
@@ -34,7 +29,7 @@ import java.net.InetSocketAddress;
 /**
  * Main Server
  *
- * @author Jibeom Jung
+ * @author Jibeom Jung akka. Manty
  */
 
 @Slf4j

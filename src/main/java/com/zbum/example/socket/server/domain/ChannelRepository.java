@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zbum.example.socket.server.netty;
+package com.zbum.example.socket.server.domain;
 
 import io.netty.channel.Channel;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * Channel Repository using HashMap
  *
- * @author Jibeom Jung
+ * @author Jibeom Jung akka. Manty
  */
 public class ChannelRepository {
     private ConcurrentMap<String, Channel> channelCache = new ConcurrentHashMap<>();
 
-    public ChannelRepository put(String key, Channel value) {
+    public void put(String key, Channel value) {
         channelCache.put(key, value);
-        return this;
     }
 
     public Channel get(String key) {

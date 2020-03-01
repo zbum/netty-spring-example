@@ -15,7 +15,8 @@
  */
 package com.zbum.example.socket.server.netty.handler;
 
-import com.zbum.example.socket.server.netty.ChannelRepository;
+import com.zbum.example.socket.server.domain.User;
+import com.zbum.example.socket.server.domain.ChannelRepository;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -27,7 +28,7 @@ import org.springframework.util.Assert;
 /**
  * event handler to process receiving messages
  *
- * @author Jibeom Jung
+ * @author Jibeom Jung akka. Manty
  */
 @Component
 @Slf4j
@@ -38,17 +39,16 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
     private final ChannelRepository channelRepository;
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
         Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
 
         ctx.fireChannelActive();
         if (log.isDebugEnabled()) {
             log.debug(ctx.channel().remoteAddress() + "");
         }
-        String channelKey = ctx.channel().remoteAddress().toString();
-        channelRepository.put(channelKey, ctx.channel());
+        String remoteAddress = ctx.channel().remoteAddress().toString();
 
-        ctx.writeAndFlush("Your channel key is " + channelKey + "\r\n");
+        ctx.writeAndFlush("Your remote address is " + remoteAddress + ".\r\n");
 
         if (log.isDebugEnabled()) {
             log.debug("Binded Channel Count is {}", this.channelRepository.size());
@@ -63,6 +63,11 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
             log.debug(stringMessage);
         }
 
+        if ( stringMessage.startsWith("login ")) {
+            ctx.fireChannelRead(msg);
+            return;
+        }
+
         String[] splitMessage = stringMessage.split("::");
 
         if (splitMessage.length != 2) {
@@ -70,13 +75,12 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
             return;
         }
 
-        if (channelRepository.get(splitMessage[0]) != null) {
-            channelRepository.get(splitMessage[0]).writeAndFlush(splitMessage[1] + "\n\r");
-        }
+        User.current(ctx.channel())
+                .tell(channelRepository.get(splitMessage[0]), splitMessage[0], splitMessage[1]);
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error(cause.getMessage(), cause);
     }
 
@@ -85,10 +89,9 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
         Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
         Assert.notNull(ctx, "[Assertion failed] - ChannelHandlerContext is required; it must not be null");
 
-        String channelKey = ctx.channel().remoteAddress().toString();
-        this.channelRepository.remove(channelKey);
+        User.current(ctx.channel()).logout(this.channelRepository, ctx.channel());
         if (log.isDebugEnabled()) {
-            log.debug("Binded Channel Count is " + this.channelRepository.size());
+            log.debug("Channel Count is " + this.channelRepository.size());
         }
     }
 }

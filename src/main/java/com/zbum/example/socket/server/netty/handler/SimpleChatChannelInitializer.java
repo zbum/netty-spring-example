@@ -28,16 +28,14 @@ import org.springframework.stereotype.Component;
 /**
  * Channel Initializer
  *
- * @author Jibeom Jung
+ * @author Jibeom Jung akka. Manty
  */
 @Component
 @RequiredArgsConstructor
 public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final StringDecoder DECODER = new StringDecoder();
-    private final StringEncoder ENCODER = new StringEncoder();
-
     private final SimpleChatServerHandler simpleChatServerHandler;
+    private final LoginHandler loginHandler;
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
@@ -46,9 +44,10 @@ public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChann
         // Add the text line codec combination first,
         pipeline.addLast(new DelimiterBasedFrameDecoder(1024 * 1024, Delimiters.lineDelimiter()));
         // the encoder and decoder are static as these are sharable
-        pipeline.addLast(DECODER);
-        pipeline.addLast(ENCODER);
+        pipeline.addLast(new StringDecoder());
+        pipeline.addLast(new StringEncoder());
 
         pipeline.addLast(simpleChatServerHandler);
+        pipeline.addLast(loginHandler);
     }
 }
