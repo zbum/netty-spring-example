@@ -49,7 +49,7 @@ public class TCPServer {
             log.info("Server is started : port {}", tcpPort.getPort());
             serverChannel = serverChannelFuture.channel().closeFuture().sync().channel();
         } catch (InterruptedException e) {
-            throw new TCPServerStartFailedException(e);
+            Thread.currentThread().interrupt();
         }
     }
 

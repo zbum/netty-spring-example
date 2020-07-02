@@ -15,8 +15,8 @@
  */
 package com.zbum.example.socket.server.netty.handler;
 
-import com.zbum.example.socket.server.domain.User;
 import com.zbum.example.socket.server.domain.ChannelRepository;
+import com.zbum.example.socket.server.domain.User;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
