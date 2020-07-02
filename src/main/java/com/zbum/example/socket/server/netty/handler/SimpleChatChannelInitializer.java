@@ -36,6 +36,8 @@ public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChann
 
     private final SimpleChatServerHandler simpleChatServerHandler;
     private final LoginHandler loginHandler;
+    private final StringEncoder stringEncoder = new StringEncoder();
+    private final StringDecoder stringDecoder = new StringDecoder();
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
@@ -43,10 +45,9 @@ public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChann
 
         // Add the text line codec combination first,
         pipeline.addLast(new DelimiterBasedFrameDecoder(1024 * 1024, Delimiters.lineDelimiter()));
-        // the encoder and decoder are static as these are sharable
-        pipeline.addLast(new StringDecoder());
-        pipeline.addLast(new StringEncoder());
 
+        pipeline.addLast(stringDecoder);
+        pipeline.addLast(stringEncoder);
         pipeline.addLast(simpleChatServerHandler);
         pipeline.addLast(loginHandler);
     }

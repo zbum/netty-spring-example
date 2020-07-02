@@ -15,8 +15,8 @@
  */
 package com.zbum.example.socket.server.netty.handler;
 
-import com.zbum.example.socket.server.domain.User;
 import com.zbum.example.socket.server.domain.ChannelRepository;
+import com.zbum.example.socket.server.domain.User;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -51,7 +51,7 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
         ctx.writeAndFlush("Your remote address is " + remoteAddress + ".\r\n");
 
         if (log.isDebugEnabled()) {
-            log.debug("Binded Channel Count is {}", this.channelRepository.size());
+            log.debug("Bound Channel Count is {}", this.channelRepository.size());
         }
 
     }
