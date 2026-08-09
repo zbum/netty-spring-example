@@ -15,6 +15,7 @@
  */
 package com.zbum.example.socket.server.domain;
 
+import com.zbum.example.socket.server.netty.handler.RemoteAddress;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import lombok.Getter;
@@ -31,10 +32,12 @@ public class User {
     @Getter
     private final String username;
     private final Channel channel;
+    private final String remoteAddress;
 
     private User(String username, Channel channel){
         this.username = username;
         this.channel = channel;
+        this.remoteAddress = RemoteAddress.display(channel);
     }
 
     public static User of(@NonNull String loginCommand, @NonNull Channel channel) {
@@ -65,7 +68,7 @@ public class User {
 
     public void tell(Channel targetChannel, @NonNull String username, @NonNull String message) {
         if (targetChannel != null) {
-            targetChannel.write(this.username);
+            targetChannel.write(this.username + " (" + this.remoteAddress + ")");
             targetChannel.write(">");
             targetChannel.writeAndFlush(message + "\n\r");
             this.channel.writeAndFlush("The message was sent to ["+username+"] successfully.\r\n");

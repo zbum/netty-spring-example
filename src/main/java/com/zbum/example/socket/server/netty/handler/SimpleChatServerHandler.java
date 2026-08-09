@@ -20,6 +20,7 @@ import com.zbum.example.socket.server.domain.User;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.haproxy.HAProxyMessageDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -46,9 +47,9 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
         if (log.isDebugEnabled()) {
             log.debug(ctx.channel().remoteAddress() + "");
         }
-        String remoteAddress = ctx.channel().remoteAddress().toString();
-
-        ctx.writeAndFlush("Your remote address is " + remoteAddress + ".\r\n");
+        if (ctx.pipeline().get(HAProxyMessageDecoder.class) == null) {
+            ctx.writeAndFlush("Your remote address is " + RemoteAddress.display(ctx.channel()) + ".\r\n");
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Bound Channel Count is {}", this.channelRepository.size());
@@ -89,7 +90,10 @@ public class SimpleChatServerHandler extends ChannelInboundHandlerAdapter {
         Assert.notNull(this.channelRepository, "[Assertion failed] - ChannelRepository is required; it must not be null");
         Assert.notNull(ctx, "[Assertion failed] - ChannelHandlerContext is required; it must not be null");
 
-        User.current(ctx.channel()).logout(this.channelRepository, ctx.channel());
+        User user = ctx.channel().attr(User.USER_ATTRIBUTE_KEY).get();
+        if (user != null) {
+            user.logout(this.channelRepository, ctx.channel());
+        }
         if (log.isDebugEnabled()) {
             log.debug("Channel Count is " + this.channelRepository.size());
         }

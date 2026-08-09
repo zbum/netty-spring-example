@@ -15,9 +15,9 @@
  */
 package com.zbum.example.socket.server.config;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -33,7 +33,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "netty")
 public class NettyProperties {
     @NotNull
-    @Size(min = 1000, max = 65535)
+    @Min(1000)
+    @Max(65535)
     private int tcpPort;
 
     @NotNull
@@ -49,4 +50,6 @@ public class NettyProperties {
 
     @NotNull
     private int backlog;
+
+    private boolean proxyProtocolEnabled;
 }
