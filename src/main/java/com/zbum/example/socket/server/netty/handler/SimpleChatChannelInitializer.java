@@ -41,6 +41,7 @@ public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChann
     private final SimpleChatServerHandler simpleChatServerHandler;
     private final LoginHandler loginHandler;
     private final NettyProperties nettyProperties;
+    private final TlsHandlerProvider tlsHandlerProvider;
     private final StringEncoder stringEncoder = new StringEncoder(StandardCharsets.UTF_8);
     private final StringDecoder stringDecoder = new StringDecoder(StandardCharsets.UTF_8);
 
@@ -53,6 +54,7 @@ public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChann
             pipeline.addLast(new HAProxyMessageDecoder());
             pipeline.addLast(new HAProxyRemoteAddressHandler());
         }
+        tlsHandlerProvider.configure(pipeline, socketChannel.alloc());
 
         pipeline.addLast(new DelimiterBasedFrameDecoder(1024 * 1024, Delimiters.lineDelimiter()));
 
