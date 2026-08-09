@@ -19,7 +19,8 @@ import com.zbum.example.socket.server.domain.ChannelRepository;
 import com.zbum.example.socket.server.netty.handler.SimpleChatChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
@@ -54,13 +55,13 @@ public class NettyConfiguration {
     }
 
     @Bean(destroyMethod = "shutdownGracefully")
-    public NioEventLoopGroup bossGroup() {
-        return new NioEventLoopGroup(nettyProperties.getBossCount());
+    public MultiThreadIoEventLoopGroup bossGroup() {
+        return new MultiThreadIoEventLoopGroup(nettyProperties.getBossCount(), NioIoHandler.newFactory());
     }
 
     @Bean(destroyMethod = "shutdownGracefully")
-    public NioEventLoopGroup workerGroup() {
-        return new NioEventLoopGroup(nettyProperties.getWorkerCount());
+    public MultiThreadIoEventLoopGroup workerGroup() {
+        return new MultiThreadIoEventLoopGroup(nettyProperties.getWorkerCount(), NioIoHandler.newFactory());
     }
 
     @Bean
