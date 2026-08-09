@@ -6,71 +6,71 @@
  * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 package com.zbum.example.socket.server.netty.handler;
 
 import com.zbum.example.socket.server.domain.ChannelRepository;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.embedded.EmbeddedChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.string.StringDecoder;
 import org.junit.jupiter.api.Test;
 
-import java.net.SocketAddress;
+import java.nio.charset.StandardCharsets;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Test for  SimpleChatServerHandler.java
- *
- * @author Jibeom Jung akka. Manty
- */
-public class SimpleChatServerHandlerTest {
+class SimpleChatServerHandlerTest {
+    @Test
+    void announcesTheRemoteAddressWhenAChannelBecomesActive() {
+        EmbeddedChannel channel = new EmbeddedChannel(
+                new SimpleChatServerHandler(new ChannelRepository()));
 
-    private SimpleChatServerHandler somethingServerHandler;
-
-    private ChannelHandlerContext channelHandlerContext;
-
-    private Channel channel;
-
-    private SocketAddress remoteAddress;
-
-    @BeforeEach
-    void setUp() {
-        somethingServerHandler = new SimpleChatServerHandler(new ChannelRepository());
-
-        channelHandlerContext = mock(ChannelHandlerContext.class);
-        channel = mock(Channel.class);
-        remoteAddress = mock(SocketAddress.class);
-    }
-
-    @AfterEach
-    void tearDown() {
-
+        assertThat((Object) channel.readOutbound())
+                .isEqualTo("Your remote address is unknown.\r\n");
+        channel.finishAndReleaseAll();
     }
 
     @Test
-    void testChannelActive() throws Exception {
-        when(channelHandlerContext.channel()).thenReturn(channel);
-        when(channelHandlerContext.channel().remoteAddress()).thenReturn(remoteAddress);
-        somethingServerHandler.channelActive(channelHandlerContext);
+    void echoesMessagesThatAreNotDirectMessages() {
+        EmbeddedChannel channel = new EmbeddedChannel(
+                new SimpleChatServerHandler(new ChannelRepository()));
+        channel.readOutbound();
+
+        channel.writeInbound("hello");
+
+        assertThat((Object) channel.readOutbound()).isEqualTo("hello\n\r");
+        channel.finishAndReleaseAll();
     }
 
     @Test
-    void testChannelRead() {
-        when(channelHandlerContext.channel()).thenReturn(channel);
-        somethingServerHandler.channelRead(channelHandlerContext, "test message");
+    void forwardsRawByteBufMessagesWithoutCastingThemToString() {
+        EmbeddedChannel channel = new EmbeddedChannel(
+                new SimpleChatServerHandler(new ChannelRepository()));
+        channel.readOutbound();
+        ByteBuf message = PooledByteBufAllocator.DEFAULT.directBuffer().writeByte(1);
+
+        assertThat(channel.writeInbound(message)).isTrue();
+        assertThat((Object) channel.readInbound()).isSameAs(message);
+        message.release();
+        channel.finishAndReleaseAll();
     }
 
     @Test
-    void testExceptionCaught() {
+    void decodesRawTcpDataBeforeItReachesTheChatHandler() {
+        EmbeddedChannel channel = new EmbeddedChannel(
+                new DelimiterBasedFrameDecoder(1024, Delimiters.lineDelimiter()),
+                new StringDecoder(),
+                new SimpleChatServerHandler(new ChannelRepository()));
+        channel.readOutbound();
+        ByteBuf message = PooledByteBufAllocator.DEFAULT.directBuffer();
+        message.writeCharSequence("hello\r\n", StandardCharsets.UTF_8);
 
+        channel.writeInbound(message);
+
+        assertThat((Object) channel.readOutbound()).isEqualTo("hello\n\r");
+        channel.finishAndReleaseAll();
     }
 }

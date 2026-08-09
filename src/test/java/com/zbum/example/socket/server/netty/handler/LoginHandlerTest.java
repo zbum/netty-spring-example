@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Queue;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 /**
  * Test for  LoginHandler.java
@@ -37,7 +36,7 @@ class LoginHandlerTest {
 
     @BeforeEach
     void setup() {
-        channelRepository = mock(ChannelRepository.class);
+        channelRepository = new ChannelRepository();
     }
 
     @Test
