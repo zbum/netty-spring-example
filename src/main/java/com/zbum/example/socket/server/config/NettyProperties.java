@@ -22,6 +22,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Netty ConfigurationProperties
@@ -52,4 +54,26 @@ public class NettyProperties {
     private int backlog;
 
     private boolean proxyProtocolEnabled;
+
+    private Tls tls = new Tls();
+
+    @Getter
+    @Setter
+    public static class Tls {
+        private boolean enabled;
+        private boolean sniEnabled;
+        private String certificateChain;
+        private String privateKey;
+        private String privateKeyPassword;
+        private List<SniCertificate> sniCertificates = new ArrayList<>();
+    }
+
+    @Getter
+    @Setter
+    public static class SniCertificate {
+        private String hostname;
+        private String certificateChain;
+        private String privateKey;
+        private String privateKeyPassword;
+    }
 }
