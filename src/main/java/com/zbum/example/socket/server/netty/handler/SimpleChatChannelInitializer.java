@@ -27,6 +27,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Channel Initializer
  *
@@ -39,8 +41,8 @@ public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChann
     private final SimpleChatServerHandler simpleChatServerHandler;
     private final LoginHandler loginHandler;
     private final NettyProperties nettyProperties;
-    private final StringEncoder stringEncoder = new StringEncoder();
-    private final StringDecoder stringDecoder = new StringDecoder();
+    private final StringEncoder stringEncoder = new StringEncoder(StandardCharsets.UTF_8);
+    private final StringDecoder stringDecoder = new StringDecoder(StandardCharsets.UTF_8);
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {

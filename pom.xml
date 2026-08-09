@@ -11,12 +11,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>4.1.0</version>
     </parent>
 
     <properties>
-        <java.version>22</java.version>
-        <lombok.version>1.18.40</lombok.version>
+        <java.version>26</java.version>
+        <lombok.version>1.18.46</lombok.version>
+        <netty.version>4.2.17.Final</netty.version>
     </properties>
 
     <dependencies>
@@ -30,14 +31,8 @@
         </dependency>
 
         <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.45.Final</version>
         </dependency>
 
         <dependency>
