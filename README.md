@@ -67,6 +67,11 @@ alice (203.0.113.10:45678)>hello
 
 ## Changelog
 
+### 2026-08-09 — `feature/handle-non-string-messages`
+
+* Prevented raw Netty `ByteBuf` messages from causing a `ClassCastException` in `SimpleChatServerHandler` ([#14](https://github.com/zbum/netty-spring-example/issues/14)).
+* Added coverage for undecoded messages and the normal delimiter/string decoder pipeline.
+
 ### 2026-08-09 — `feature/proxy_protocol`
 
 * Made HAProxy PROXY protocol decoding configurable with `netty.proxy-protocol-enabled`.
@@ -75,4 +80,3 @@ alice (203.0.113.10:45678)>hello
  
 ## If you want to know about the Author
 * see : [https://www.manty.co.kr](https://www.manty.co.kr)
-
