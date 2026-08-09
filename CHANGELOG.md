@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-09 — `feature/tls-sni-support`
+
+* Added optional TLS encryption configured with PEM certificate and private-key resources.
+* Added optional SNI hostname mappings for selecting different server certificates.
+* Documented local TLS login and SNI testing with OpenSSL.
+
 ## 2026-08-09 — `feature/framework-dependency-upgrades`
 
 * Upgraded to JDK 26, Spring Boot 4.1.0, Spring Framework 7.0.8, Netty 4.2.17.Final, and Lombok 1.18.46.
