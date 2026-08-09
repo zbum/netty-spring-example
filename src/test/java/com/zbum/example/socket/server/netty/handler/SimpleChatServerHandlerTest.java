@@ -16,6 +16,7 @@ import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -71,6 +72,26 @@ class SimpleChatServerHandlerTest {
         channel.writeInbound(message);
 
         assertThat((Object) channel.readOutbound()).isEqualTo("hello\n\r");
+        channel.finishAndReleaseAll();
+    }
+
+    @Test
+    void roundTripsCjkMessagesAsUtf8() {
+        EmbeddedChannel channel = new EmbeddedChannel(
+                new DelimiterBasedFrameDecoder(1024, Delimiters.lineDelimiter()),
+                new StringDecoder(StandardCharsets.UTF_8),
+                new StringEncoder(StandardCharsets.UTF_8),
+                new SimpleChatServerHandler(new ChannelRepository()));
+        ((ByteBuf) channel.readOutbound()).release();
+        String cjkMessage = "안녕하세요 你好 こんにちは";
+        ByteBuf input = PooledByteBufAllocator.DEFAULT.directBuffer();
+        input.writeCharSequence(cjkMessage + "\r\n", StandardCharsets.UTF_8);
+
+        channel.writeInbound(input);
+
+        ByteBuf output = channel.readOutbound();
+        assertThat(output.toString(StandardCharsets.UTF_8)).isEqualTo(cjkMessage + "\n\r");
+        output.release();
         channel.finishAndReleaseAll();
     }
 }

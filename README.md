@@ -7,12 +7,20 @@ The main purpose of this codes is to explain how to build Netty based server app
 
 
 ## Feature
-* Telnet Client can send message to other telnet client.
+* Netcat clients can send messages to each other.
 * HAProxy PROXY protocol v1/v2 can supply the original client IP address and port.
+* TCP messages use UTF-8 explicitly, including Korean, Chinese, and Japanese text.
+
+## Requirements
+
+* JDK 26
+* Maven 3.6.3 or later
+
+The project uses Spring Boot 4.1.0 (Spring Framework 7.0.8), Netty 4.2.17.Final, and Lombok 1.18.46.
 
 ## Configuration
 
-Set `netty.proxy-protocol-enabled=true` only when every connection is made through a load balancer that sends a PROXY protocol header. The default is `false`, which keeps direct TCP and telnet connections working normally.
+Set `netty.proxy-protocol-enabled=true` only when every connection is made through a load balancer that sends a PROXY protocol header. The default is `false`, which keeps direct TCP and netcat connections working normally.
 
 When enabled, the server uses the source address from the PROXY header for the login session. A direct message received from that user includes the address, for example:
 
@@ -21,62 +29,52 @@ alice (203.0.113.10:45678)>hello
 ```
 
 ## How to use
-* Run com.zbum.example.socket.server.netty.Application with IDE or Maven
-```
-    $ mvn spring-boot:run
-```
-* Connect to this server by telnet command. 
-* And login with login command.
-```
-    $ telnet localhost 8090
-    Trying ::1...
-    Connected to localhost.
-    Escape character is '^]'.
-    Your channel key is /0:0:0:0:0:0:0:1:57220
-    login A
-    Successfully logged in as A.
-```
-* Connect to this server by telnet command on another terminal and login.
-```
-    $ telnet localhost 8090
-    Trying ::1...
-    Connected to localhost.
-    Escape character is '^]'.
-    Your channel key is /0:0:0:0:0:0:0:1:57221
-    login B
-    Successfully logged in as B.
-```
-* From now, you can send message to `A` by below
-```
-    A::I Love You!!!
-    The message was sent to [A] successfully.
-```
-* Then, you can receive Message like below
+
+Run `com.zbum.example.socket.server.MantyChatApplication` from an IDE or start it with Maven:
+
 ```bash
-    $ telnet localhost 8090
-    Trying ::1...
-    Connected to localhost.
-    Escape character is '^]'.
-    Your channel key is /0:0:0:0:0:0:0:1:57220
-    login A
-    Successfully logged in as A. 
-    B>I Love you!!
+mvn spring-boot:run
 ```
+
+Open the first terminal, connect with netcat, and log in as `A`:
+
+```text
+$ nc localhost 8090
+Your remote address is 127.0.0.1:57220.
+login A
+Successfully logged in as A.
+```
+
+Open another terminal and log in as `B`:
+
+```text
+$ nc localhost 8090
+Your remote address is 127.0.0.1:57221.
+login B
+Successfully logged in as B.
+```
+
+From `B`, send a UTF-8 message to `A` using `<username>::<message>`:
+
+```text
+A::안녕하세요 你好 こんにちは
+The message was sent to [A] successfully.
+```
+
+The first terminal receives the sender's name, address, and message:
+
+```text
+B (127.0.0.1:57221)>안녕하세요 你好 こんにちは
+```
+
+Press `Ctrl-C` to close an `nc` session.
+
 ## TODO
 * Establishing connection with TLS and SNI
 
 ## Changelog
 
-### 2026-08-09 — `feature/handle-non-string-messages`
-
-* Prevented raw Netty `ByteBuf` messages from causing a `ClassCastException` in `SimpleChatServerHandler` ([#14](https://github.com/zbum/netty-spring-example/issues/14)).
-* Added coverage for undecoded messages and the normal delimiter/string decoder pipeline.
-
-### 2026-08-09 — `feature/proxy_protocol`
-
-* Made HAProxy PROXY protocol decoding configurable with `netty.proxy-protocol-enabled`.
-* Passed the original source IP and port through the Netty channel and included them in messages sent to other users.
-* Added PROXY address and user-message tests; verified the full Maven test suite and Java 25 build compatibility.
+See [CHANGELOG.md](CHANGELOG.md).
  
 ## If you want to know about the Author
 * see : [https://www.manty.co.kr](https://www.manty.co.kr)
