@@ -15,14 +15,12 @@
  */
 package com.zbum.example.socket.server.netty.handler;
 
-import io.netty.channel.ChannelHandlerContext;
+import com.zbum.example.socket.server.config.NettyProperties;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.haproxy.HAProxyMessage;
 import io.netty.handler.codec.haproxy.HAProxyMessageDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
@@ -40,6 +38,7 @@ public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChann
 
     private final SimpleChatServerHandler simpleChatServerHandler;
     private final LoginHandler loginHandler;
+    private final NettyProperties nettyProperties;
     private final StringEncoder stringEncoder = new StringEncoder();
     private final StringDecoder stringDecoder = new StringDecoder();
 
@@ -48,14 +47,10 @@ public class SimpleChatChannelInitializer extends ChannelInitializer<SocketChann
         ChannelPipeline pipeline = socketChannel.pipeline();
 
         // Add the text line codec combination first,
-        pipeline.addLast(new HAProxyMessageDecoder());
-        pipeline.addLast(new SimpleChannelInboundHandler<HAProxyMessage>() {
-            @Override
-            protected void channelRead0(ChannelHandlerContext ctx, HAProxyMessage haProxyMessage) throws Exception {
-                System.out.println("Received HAProxy message: " + haProxyMessage.sourceAddress());
-                System.out.println("Received HAProxy message: " + haProxyMessage.sourcePort());
-            }
-        });
+        if (nettyProperties.isProxyProtocolEnabled()) {
+            pipeline.addLast(new HAProxyMessageDecoder());
+            pipeline.addLast(new HAProxyRemoteAddressHandler());
+        }
 
         pipeline.addLast(new DelimiterBasedFrameDecoder(1024 * 1024, Delimiters.lineDelimiter()));
 

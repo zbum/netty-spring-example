@@ -8,6 +8,17 @@ The main purpose of this codes is to explain how to build Netty based server app
 
 ## Feature
 * Telnet Client can send message to other telnet client.
+* HAProxy PROXY protocol v1/v2 can supply the original client IP address and port.
+
+## Configuration
+
+Set `netty.proxy-protocol-enabled=true` only when every connection is made through a load balancer that sends a PROXY protocol header. The default is `false`, which keeps direct TCP and telnet connections working normally.
+
+When enabled, the server uses the source address from the PROXY header for the login session. A direct message received from that user includes the address, for example:
+
+```text
+alice (203.0.113.10:45678)>hello
+```
 
 ## How to use
 * Run com.zbum.example.socket.server.netty.Application with IDE or Maven
@@ -53,8 +64,15 @@ The main purpose of this codes is to explain how to build Netty based server app
 ```
 ## TODO
 * Establishing connection with TLS and SNI
+
+## Changelog
+
+### 2026-08-09 — `feature/proxy_protocol`
+
+* Made HAProxy PROXY protocol decoding configurable with `netty.proxy-protocol-enabled`.
+* Passed the original source IP and port through the Netty channel and included them in messages sent to other users.
+* Added PROXY address and user-message tests; verified the full Maven test suite and Java 25 build compatibility.
  
 ## If you want to know about the Author
 * see : [https://www.manty.co.kr](https://www.manty.co.kr)
-
 
